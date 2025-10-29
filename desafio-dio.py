@@ -15,6 +15,27 @@ LIMITE_SAQUES = 3
 
 opcao_menu = (input(menu))
 
+usuarios = []
+
+def criar_endereco(logradouro, numero, bairro, cidade, sigla, estado):
+    return f"{logradouro}, {numero} - {bairro}, {cidade}/{sigla} - {estado}"
+
+usuarios = []
+
+def criar_usuario(nome, email, endereco):
+    usuario = {
+        "nome": nome,
+        "endereco": endereco
+    }
+    usuarios.append(usuario)
+    print(f"Usuário {nome} criado com sucesso!")
+
+endereco_cesar = criar_endereco("Rua das Flores", "123", "Centro", "São Paulo", "SP", "São Paulo")
+criar_usuario("César", "28-10-2025", endereco_cesar)
+
+for u in usuarios:
+    print(u)
+
 def depositar(valor, /):
     if opcao_menu == "d":
         valor = float(input("Informe o valor do depósito: "))
