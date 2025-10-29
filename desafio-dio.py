@@ -69,6 +69,7 @@ def depositar(valor, /):
 
 def sacar(*, valor):
     global saldo, numero_saques, extrato_bancario
+
     excedeu_saldo = valor > saldo
     excedeu_limite = valor > limite
     excedeu_saques = numero_saques >= LIMITE_SAQUES
@@ -77,16 +78,16 @@ def sacar(*, valor):
         print("Operação falhou! Você não tem saldo suficiente.")
 
     elif excedeu_limite:
-        print("Operação falhou! O valor do saque excede o limite.")
+        print("Operação falhou! O valor do saque excede o limite de R$ 500,00.")
 
     elif excedeu_saques:
-        print("Operação falhou! Número máximo de saques excedido.")
+        print("Operação falhou! Número máximo de saques diários excedido (3 por dia).")
 
     elif valor > 0:
         saldo -= valor
         extrato_bancario += f"Saque: R$ {valor:.2f}\n"
         numero_saques += 1
-        print(f"Saque de R$ {valor:.2f} realizado com sucesso!")
+        print(f"Saque de R$ {valor:.2f} realizado com sucesso! ({numero_saques}/3 saques do dia)")
 
     else:
         print("Operação falhou! O valor informado é inválido.") 
