@@ -36,6 +36,39 @@ criar_usuario("César", "28-10-2025", endereco_cesar)
 for u in usuarios:
     print(u)
 
+contas = []
+
+def criar_conta_corrente(cpf, usuarios, contas):
+    usuario = next((u for u in usuarios if u["cpf"] == cpf), None)
+
+    if not usuario:
+        print("Usuário não encontrado. Verifique o CPF informado.")
+        return
+    
+    numero_conta = len(contas) + 1
+
+    conta = {
+        "agencia": "0001",
+        "numero_conta": numero_conta,
+        "usuario": usuario
+    }
+
+    contas.append(conta)
+    print(f"Conta {numero_conta} criada com sucesso para {usuario['nome']}!")
+
+def listar_contas(contas):
+    if not contas:
+        print("Nenhuma conta cadastrada.")
+        return
+
+    for conta in contas:
+        print(f"""
+        Agência: {conta['agencia']}
+        Conta: {conta['numero_conta']}
+        Titular: {conta['usuario']['nome']}
+        CPF: {conta['usuario']['cpf']}
+        """)
+
 def depositar(valor, /):
     if opcao_menu == "d":
         valor = float(input("Informe o valor do depósito: "))
