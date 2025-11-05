@@ -65,14 +65,15 @@ def listar_contas(contas):
         CPF: {conta['usuario']['cpf']}
         """)
 
-def depositar(valor, /):
-    global saldo, extrato_bancario
+def depositar(valor, saldo, extrato_bancario, /):
     if valor > 0:
         saldo += valor
         extrato_bancario += f"Depósito: R$ {valor:.2f}\n"
         print(f"Depósito de R$ {valor:.2f} realizado com sucesso!")
     else:
         print("Operação falhou! O valor informado é inválido.")
+    
+    return saldo, extrato_bancario
 
 def sacar(*, valor):
     global saldo, numero_saques, extrato_bancario
