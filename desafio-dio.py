@@ -23,34 +23,35 @@ LIMITE_SAQUES = 3
 usuarios = []
 contas = []
 
-def criar_endereco(logradouro, numero, bairro, cidade, sigla, estado):
-    return f"{logradouro}, {numero} - {bairro}, {cidade}/{sigla} - {estado}"
+def criar_usuario(usuarios):
+    cpf = input("Informe o CPF (somente número): ")
+    usuario = filtrar_usuario(cpf, usuarios)
 
-def criar_usuario(nome, cpf, endereco):
-    usuario = {
-        "nome": nome,
-        "cpf": cpf,
-        "endereco": endereco
-    }
-    usuarios.append(usuario)
-    print(f"Usuário {nome} criado com sucesso!")
-
-def criar_conta_corrente(cpf, usuarios, contas):
-    usuario = next((u for u in usuarios if u["cpf"] == cpf), None)
-
-    if not usuario:
-        print("Usuário não encontrado. Verifique o CPF informado.")
+    if usuario:
+        print("\nJá existe usuário com esse CPF!")
         return
-    
-    numero_conta = len(contas) + 1
-    conta = {
-        "agencia": "0001",
-        "numero_conta": numero_conta,
-        "usuario": usuario
-    }
 
-    contas.append(conta)
-    print(f"Conta {numero_conta} criada com sucesso para {usuario['nome']}!")
+    nome = input("Informe o nome completo: ")
+    data_nascimento = input("Informe a data de nascimento (dd-mm-aaaa): ")
+    endereco = input("Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ")
+
+    usuarios.append({"nome": nome, "data_nascimento": data_nascimento, "cpf": cpf, "endereco": endereco})
+
+    print("Usuário criado com sucesso!")
+
+def filtrar_usuario(cpf, usuarios):
+    usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
+    return usuarios_filtrados[0] if usuarios_filtrados else None
+
+def criar_conta(agencia, numero_conta, usuarios):
+    cpf = input("Informe o CPF do usuário: ")
+    usuario = filtrar_usuario(cpf, usuarios)
+
+    if usuario:
+        print("\nConta criada com sucesso!")
+        return {"agencia": agencia, "numero_conta": numero_conta, "usuario": usuario}
+
+    print("\nUsuário não encontrado, fluxo de criação de conta encerrado!")
 
 def listar_contas(contas):
     if not contas:
@@ -100,15 +101,12 @@ def sacar(*, saldo, valor, extrato_bancario, limite, numero_saques, limite_saque
 
     return saldo, extrato_bancario
 
-def exibir_extrato(saldo, /, *, extrato):
+
+def exibir_extrato(saldo, /, *, extrato_bancario):
     print("\n================ EXTRATO ================")
-    print("Não foram realizadas movimentações." if not extrato else extrato)
+    print("Não foram realizadas movimentações." if not extrato_bancario else extrato_bancario)
     print(f"\nSaldo: R$ {saldo:.2f}")
     print("==========================================")
-
-endereco_cesar = criar_endereco("Rua das Flores", "123", "Centro", "São Paulo", "SP", "São Paulo")
-criar_usuario("César", "12345678900", endereco_cesar)
-criar_conta_corrente("12345678900", usuarios, contas)
 
 while True:
     opcao_menu = input(menu)
