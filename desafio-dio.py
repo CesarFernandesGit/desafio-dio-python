@@ -242,6 +242,16 @@ def menu():
 => """
     return input(textwrap.dedent(menu))
 
+def filtrar_usuario(cpf, usuarios):
+    usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
+    return usuarios_filtrados[0] if usuarios_filtrados else None
+
+def recuperar_conta_cliente(cliente):
+    if not cliente.contas:
+        print("\n@@@ Cliente não possui conta! @@@")
+        return
+    # FIXME: Não permite cliente escolher a conta (será ajustado no próximo módulo do curso)
+    return cliente.contas[0]
 
 def criar_usuario(usuarios):
     cpf = input("Informe o CPF (somente números): ")
@@ -263,12 +273,6 @@ def criar_usuario(usuarios):
     })
 
     print("Usuário criado com sucesso!")
-
-
-def filtrar_usuario(cpf, usuarios):
-    usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
-    return usuarios_filtrados[0] if usuarios_filtrados else None
-
 
 def criar_conta(agencia, numero_conta, usuarios):
     cpf = input("Informe o CPF do usuário: ")
