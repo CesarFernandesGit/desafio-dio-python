@@ -219,7 +219,15 @@ class Deposito(Transacao):
     def registrar(self, conta):
         sucesso_transacao = conta.depositar(self.valor)
         if sucesso_transacao:
-            conta.historico.adicionar_transacao(self)  
+            conta.historico.adicionar_transacao(self)
+
+def log_transacao(func):
+    def envelope(*args, **kwargs):
+        resultado = func(*args, **kwargs)
+        print(f"{datetime.now()}: {func.__name__.upper()}")
+        return resultado
+
+    return envelope
 
 def menu():
     menu = """
