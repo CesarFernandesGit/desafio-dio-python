@@ -97,6 +97,50 @@ class Conta:
             print("\n@@@ Operação falhou! O valor informado é inválido. @@@")
 
         return False
+    
+def depositar(self, valor):
+    if valor > 0:
+        self._saldo += valor
+        extrato += f"Depósito: R$ {valor:.2f}\n"
+        print(f"Depósito de R$ {valor:.2f} realizado com sucesso!")
+    else:
+        print("Operação falhou! O valor informado é inválido.")
+        return False
+    
+    return True
+
+class ContaCorrente(Conta):
+    def __init__(self, numero, cliente, limite=500, limite_saques=3):
+        super().__init__(numero, cliente)
+        self._limite = limite
+        self._limite_saques = limite_saques
+
+    @classmethod
+    def nova_conta(cls, cliente, numero, limite, limite_saques):
+        return cls(numero, cliente, limite, limite_saques)
+
+    def sacar(self, valor):
+        numero_saques = len(
+            [
+                transacao
+                for transacao in self.historico.transacoes
+                if transacao["tipo"] == Saque.__name__
+            ]
+        )
+
+        excedeu_limite = valor > self._limite
+        excedeu_saques = numero_saques >= self._limite_saques
+
+        if excedeu_limite:
+            print("\n@@@ Operação falhou! O valor do saque excede o limite. @@@")
+
+        elif excedeu_saques:
+            print("\n@@@ Operação falhou! Número máximo de saques excedido. @@@")
+
+        else:
+            return super().sacar(valor)
+
+        return False
 
 def menu():
     menu = """
@@ -166,44 +210,6 @@ def listar_contas(contas):
         Titular: {conta['usuario']['nome']}
         CPF: {conta['usuario']['cpf']}
         """)
-
-
-def depositar(valor, saldo, extrato, /):
-    if valor > 0:
-        saldo += valor
-        extrato += f"Depósito: R$ {valor:.2f}\n"
-        print(f"Depósito de R$ {valor:.2f} realizado com sucesso!")
-    else:
-        print("Operação falhou! O valor informado é inválido.")
-    
-    return saldo, extrato
-
-
-def sacar(*, saldo, valor, extrato, limite, numero_saques, limite_saques):
-    excedeu_saldo = valor > saldo
-    excedeu_limite = valor > limite
-    excedeu_saques = numero_saques >= limite_saques
-
-    if excedeu_saldo:
-        print("Operação falhou! Você não tem saldo suficiente.")
-
-    elif excedeu_limite:
-        print("Operação falhou! O valor do saque excede o limite de R$ 500,00.")
-
-    elif excedeu_saques:
-        print("Operação falhou! Número máximo de saques diários excedido (3 por dia).")
-
-    elif valor > 0:
-        saldo -= valor
-        extrato += f"Saque: R$ {valor:.2f}\n"
-        numero_saques += 1
-        print(f"Saque de R$ {valor:.2f} realizado com sucesso! ({numero_saques}/3 saques do dia)")
-
-    else:
-        print("Operação falhou! O valor informado é inválido.")
-
-    return saldo, extrato, numero_saques
-
 
 def exibir_extrato(saldo, /, *, extrato):
     print("\n================ EXTRATO ================")
